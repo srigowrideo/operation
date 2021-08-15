@@ -1,0 +1,39 @@
+DATA    SEGMENT 
+        NO1   DB  80H 
+        NO2   DB  40H 
+        SUM   DW  0H 
+        SUBT  DB  0H 
+        BORROW DB 0H 
+        PROD      DW   0H 
+         Q              DB  0H 
+          R             DB  0H 
+DATA    ENDS 
+CODE    SEGMENT 
+        ASSUME CS : CODE , DS :DATA 
+START: MOV AX, DATA 
+       MOV DS, AX 
+       MOV AL, NO1
+       MOV AL, NO2
+       DAA
+       MOV BYTE PTR SUM, AL
+       JNC NEXT 
+       INC [SUM+1]
+ NEXT : MOV AL, NO1
+        SUB AL, NO2 
+         DAS 
+         MOV SUBT , AL 
+         JNC  NEXT 1 
+         MOV BORROW,1
+NEXT 1: MOV AL, NO1 
+        MUL BL 
+        MOV PROD,AX 
+        MOV AL, NO1
+        MOV AH,00H 
+        DIV BL 
+        MOV Q,AL 
+        MOV R,AH 
+        MOV AH,4CH 
+        INT 21H 
+CODE    ENDS 
+        END  START 
+       
